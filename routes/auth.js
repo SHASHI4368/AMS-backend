@@ -52,7 +52,7 @@ router.get("/google/callback", (req, res, next) => {
       if (authAction === "signup") {
         redirectUrl = `${process.env.CLIENT_URL}/signup`;
       } else {
-        redirectUrl = `${process.env.CLIENT_URL}/`;
+        redirectUrl = `${process.env.CLIENT_URL}/signup`;
       }
 
       delete req.session.authAction; // Clear the session variable
