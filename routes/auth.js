@@ -6,6 +6,9 @@ const passport = require("passport");
 
 router.get("/login/success", (req, res) => {
   if (req.user) {
+    console.log(req.user);
+    res.clearCookie("session");
+    res.clearCookie("session.sig");
     res.status(200).json({
       error: false,
       message: "Successfully Logged In",
