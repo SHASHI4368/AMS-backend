@@ -6,8 +6,6 @@ const passport = require("passport");
 
 router.get("/login/success", (req, res) => {
   if (req.user) {
-    res.clearCookie("session");
-    res.clearCookie("session.sig");
     res.status(200).json({
       error: false,
       message: "Successfully Logged In",
@@ -52,7 +50,7 @@ router.get("/google/callback", (req, res, next) => {
       if (authAction === "signup") {
         redirectUrl = `${process.env.CLIENT_URL}/signup`;
       } else {
-        redirectUrl = `${process.env.CLIENT_URL}/signup`;
+        redirectUrl = `${process.env.CLIENT_URL}/`;
       }
 
       delete req.session.authAction; // Clear the session variable
