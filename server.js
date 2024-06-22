@@ -33,7 +33,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://ams-frontend-u5db.onrender.com",
     credentials: true,
     methods: "GET, PUT, POST, DELETE",
   })
@@ -70,7 +70,7 @@ app.get("/db/students", (req, res) => {
 
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://ams-frontend-u5db.onrender.com",
     methods: ["GET", "POST"],
   },
 });
