@@ -7,8 +7,7 @@ const passport = require("passport");
 router.get("/login/success", (req, res) => {
   if (req.user) {
     console.log(req.user);
-    res.clearCookie("session");
-    res.clearCookie("session.sig");
+    req.send(req.user);
     res.status(200).json({
       error: false,
       message: "Successfully Logged In",
@@ -16,10 +15,11 @@ router.get("/login/success", (req, res) => {
     });
   } else {
     res
-      // .status(405)
+      .status(401)
       .json({ error: true, message: "Not Authorized", google: true });
   }
 });
+
 
 router.get("/login/failed", (req, res) => {
   res.status(401).json({
