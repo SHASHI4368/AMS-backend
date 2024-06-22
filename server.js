@@ -15,6 +15,16 @@ const socketIo = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
+// CORS configuration
+const corsOptions = {
+  origin: "https://ams-frontend-u5db.onrender.com",
+  credentials: true,
+  methods: "GET, PUT, POST, DELETE",
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -29,22 +39,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-app.use(
-  cors({
-    origin: "https://ams-frontend-u5db.onrender.com",
-    credentials: true,
-    methods: "GET, PUT, POST, DELETE",
-  })
-);
-
 app.get("/clearCookies", (req, res) => {
-  // Clear 'session' cookie
   res.clearCookie("session");
-  // Clear 'session.sig' cookie
   res.clearCookie("session.sig");
-
   res.send("Cookies cleared successfully.");
 });
 
@@ -53,14 +50,13 @@ app.use("/mail", mailRouter);
 app.use("/db", dbRouter);
 
 app.get("/db/students", (req, res) => {
-  const sql = `select * from STUDENT`;
+  const sql = `SELECT * FROM STUDENT`;
   try {
     db.all(sql, [], (err, rows) => {
       if (err) {
         res.status(500).json(err.message);
-        res.send(400).json(err.message);
       } else {
-        return res.json(rows);
+        res.json(rows);
       }
     });
   } catch (err) {
@@ -69,32 +65,29 @@ app.get("/db/students", (req, res) => {
 });
 
 const io = socketIo(server, {
-  cors: {
-    origin: "https://ams-frontend-u5db.onrender.com",
-    methods: ["GET", "POST"],
-  },
+  cors: corsOptions,
 });
 
 io.on("connection", (socket) => {
   console.log("A user connected");
   socket.on("add appointment", (apt) => {
-    io.emit("add appointment", apt); 
+    io.emit("add appointment", apt);
   });
-  socket.on("block time slot", ()=>{
+  socket.on("block time slot", () => {
     io.emit("block time slot");
-  })
+  });
   socket.on("delete appointment", (apt) => {
-    io.emit("delete appointment", apt); 
+    io.emit("delete appointment", apt);
   });
-
   socket.on("change appointment", (apt) => {
-    io.emit("change appointment", apt); 
+    io.emit("change appointment", apt);
   });
-
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
 });
 
 const port = process.env.PORT || 8080;
-server.listen(port, () => console.log(`Server up and running on port ${port} !`));
+server.listen(port, () =>
+  console.log(`Server up and running on port ${port}!`)
+);
