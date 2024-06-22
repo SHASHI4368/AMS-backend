@@ -17,7 +17,7 @@ const server = http.createServer(app);
 
 // CORS configuration
 const corsOptions = {
-  origin: "https://ams-frontend-u5db.onrender.com",
+  origin: "https://ams-frontend-394j.onrender.com",
   credentials: true,
   methods: "GET, PUT, POST, DELETE",
 };
