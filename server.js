@@ -17,7 +17,7 @@ const server = http.createServer(app);
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://amsruhuna.onrender.com",
   credentials: true,
   methods: "GET, PUT, POST, DELETE",
 };
