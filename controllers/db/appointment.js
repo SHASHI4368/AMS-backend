@@ -352,6 +352,28 @@ const deleteAppointmentByEmail = (req, res) => {
   }
 };
 
+const deleteAppointmentByStaffEmail = (req, res) => {
+  const { Email } = req.params;
+  const sql = `delete from APPOINTMENT where Lecturer_mail = ?`;
+  try {
+    db.run(sql, [Email], (err) => {
+      if (err) {
+        return res.json({
+          message: "Error",
+        });
+      } else {
+        return res.json({
+          message: "Appointments deleted successfully",
+        });
+      }
+    });
+  } catch (err) {
+    return res.json({
+      message: "Error",
+    });
+  }
+}
+
 const getAppointment = (req, res) => {
   const { Id } = req.params;
   const sql = `select * from APPOINTMENT where Id = ?`;
@@ -385,4 +407,5 @@ module.exports = {
   addBlockTimeSlot,
   deleteAppointmentByEmail,
   getStudentAppointments,
+  deleteAppointmentByStaffEmail,
 };
