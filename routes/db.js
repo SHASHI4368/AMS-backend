@@ -1,92 +1,113 @@
 const {
   getStudents,
+  getStudentByEmail,
   addStudent,
+  deleteStudent,
+  handleStdLogin,
+  handleStdRefreshToken,
+  handleStdLogout,
+  getStudentRegNumber,
+  getStudentDetails,
+  updateStudentPassword,
+  updateStudent,
+} = require("../controllers/db/student");
+
+const {
+  changeStaffImg,
+  deleteStaff,
+  getStaffList,
+  addStaff,
+  getStaffDetailsByEmail,
+  handleStaffLogin,
+  getStaffByEmail,
+  handleStaffLogout,
+  getStaffPassword,
+  handleStaffRefreshToken,
+  getDepartmentStaff,
+  updateStaffPassword,
+  updateStaff,
+} = require("../controllers/db/staff");
+
+const {
   addTempUser,
   getAllTempUsers,
   getTempUserByID,
   deleteTempUser,
   updateVerificationCode,
-  deleteStudent,
-  getStaffList,
-  addStaff,
-  getStaffDetailsByEmail,
-  handleStdLogin,
-  handleStdRefreshToken,
-  handleStdLogout,
+  getTempUserPasscode,
+} = require("../controllers/db/tempuser");
+
+const {
   addAppointment,
-  getStudentRegNumber,
   getAppointmentCount,
   getAllAppointments,
   getLastAppointment,
   updateAppointment,
   deleteAppointment,
-  handleStaffLogin,
-  getStaffByEmail,
-  handleStaffLogout,
-  getStaffPassword,
-  getStudentDetails,
   getAppointment,
   getAllConfirmedAppointments,
-  handleStaffRefreshToken,
   acceptAppointment,
-  getTempUserPasscode,
-  getStudentByEmail,
   addBlockTimeSlot,
-  getDepartmentStaff,
   deleteAppointmentByEmail,
   getStudentAppointments,
-  updateStudentPassword,
-  updateStaffPassword,
-  updateStudent,
-  updateStaff,
-} = require("../controllers/dbController");
+} = require("../controllers/db/appointment");
+
 const dbRouter = require("express").Router();
 
 const verifyJWT = require("../middlewares/verifyJWT");
 
+// student routes
 dbRouter.get("/students", getStudents);
 dbRouter.post("/students", addStudent);
 dbRouter.get("/student/details/:department/:year/:regNumber", getStudentDetails);
 dbRouter.delete("/students/", deleteStudent);
-dbRouter.post("/tempUser", addTempUser);
-dbRouter.get("/tempUsers", getAllTempUsers);
-dbRouter.get("/tempUser/:Email", getTempUserByID);
-dbRouter.delete("/tempUser/:Email", deleteTempUser);
-dbRouter.put("/tempUser", updateVerificationCode);
-dbRouter.get("/staffList", getStaffList);
-dbRouter.get("/department/:Department", getDepartmentStaff);
 dbRouter.get("/student/:Email", getStudentByEmail);
-dbRouter.post("/staff", addStaff);
 dbRouter.post("/student/login", handleStdLogin);
-dbRouter.post("/staff/login", handleStaffLogin);
-dbRouter.get("/staff/logout", handleStaffLogout);
 dbRouter.post("/student/refresh", handleStdRefreshToken);
-dbRouter.get("/staff/refresh", handleStaffRefreshToken);
 dbRouter.get("/student/logout", handleStdLogout);
-dbRouter.get("/appointment/count/:Lecturer_mail", getAppointmentCount);
-dbRouter.get("/appointment/last", getLastAppointment);
-dbRouter.post("/appointment/add", addAppointment);
-dbRouter.post("/appointment/block", addBlockTimeSlot);
-dbRouter.get("/appointments/:Lecturer_mail", getAllAppointments);
-dbRouter.get("/appointments/confirmed/:Lecturer_mail", getAllConfirmedAppointments);
 dbRouter.get("/student/regnumber/:Email", getStudentRegNumber);
-dbRouter.put("/appointment", updateAppointment);
-dbRouter.delete("/appointment/:Id", deleteAppointment);
-dbRouter.get("/appointment/delete/:Id", deleteAppointmentByEmail);
-dbRouter.get("/staff/:Email", getStaffByEmail);
-dbRouter.get("/staff/details/:Email", getStaffDetailsByEmail);
-dbRouter.get("/staff/password/:Email", getStaffPassword);
-dbRouter.get("/appointment/:Id", getAppointment);
 dbRouter.get(
   "/student/appointments/:department/:year/:regNumber",
   getStudentAppointments
 );
 dbRouter.put("/student", updateStudent);
 dbRouter.put("/student/password", updateStudentPassword);
+
+// staff routes
+dbRouter.get("/staffList", getStaffList);
+dbRouter.get("/department/:Department", getDepartmentStaff);
+dbRouter.post("/staff", addStaff);
+dbRouter.post("/staff/login", handleStaffLogin);
+dbRouter.get("/staff/logout", handleStaffLogout);
+dbRouter.get("/staff/refresh", handleStaffRefreshToken);
+dbRouter.get("/staff/:Email", getStaffByEmail);
+dbRouter.get("/staff/details/:Email", getStaffDetailsByEmail);
+dbRouter.get("/staff/password/:Email", getStaffPassword);
 dbRouter.put("/staff", updateStaff);
 dbRouter.put("/staff/password", updateStaffPassword);
-dbRouter.get("/appointment/accept/:Id", acceptAppointment);
+dbRouter.delete("/staff/:Email", deleteStaff);
+dbRouter.post("/staff/img", changeStaffImg);
+
+// temp user routes
+dbRouter.post("/tempUser", addTempUser);
+dbRouter.get("/tempUsers", getAllTempUsers);
+dbRouter.get("/tempUser/:Email", getTempUserByID);
+dbRouter.delete("/tempUser/:Email", deleteTempUser);
+dbRouter.put("/tempUser", updateVerificationCode);
 dbRouter.get("/tempUser/passcode/:Email", getTempUserPasscode);
+
+// appointment routes
+dbRouter.get("/appointment/count/:Lecturer_mail", getAppointmentCount);
+dbRouter.get("/appointment/last", getLastAppointment);
+dbRouter.post("/appointment/add", addAppointment);
+dbRouter.post("/appointment/block", addBlockTimeSlot);
+dbRouter.get("/appointments/:Lecturer_mail", getAllAppointments);
+dbRouter.get("/appointments/confirmed/:Lecturer_mail", getAllConfirmedAppointments);
+dbRouter.put("/appointment", updateAppointment);
+dbRouter.delete("/appointment/:Id", deleteAppointment);
+dbRouter.get("/appointment/delete/:Id", deleteAppointmentByEmail);
+dbRouter.get("/appointment/:Id", getAppointment);
+dbRouter.get("/appointment/accept/:Id", acceptAppointment);
 
 
 // dbRouter.use(verifyJWT);

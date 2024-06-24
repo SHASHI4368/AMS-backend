@@ -62,21 +62,6 @@ app.use("/auth", authRoute);
 app.use("/mail", mailRouter);
 app.use("/db", dbRouter);
 
-app.get("/db/students", (req, res) => {
-  const sql = `SELECT * FROM STUDENT`;
-  try {
-    db.all(sql, [], (err, rows) => {
-      if (err) {
-        res.status(500).json(err.message);
-      } else {
-        res.json(rows);
-      }
-    });
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-});
-
 const io = socketIo(server, {
   cors: corsOptions,
 });
