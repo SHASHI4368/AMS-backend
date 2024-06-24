@@ -15,18 +15,21 @@ const db = new sqlite.Database("./ams.db", sqlite.OPEN_READWRITE, (err) => {
 
 const getStudents = (req, res) => {
   const sql = `select Email from STUDENT`;
-  console.log(first)
+  console.log(first);
   try {
     db.all(sql, [], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -52,14 +55,17 @@ const getStaffList = (req, res) => {
   try {
     db.all(sql, [], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -69,17 +75,19 @@ const getDepartmentStaff = (req, res) => {
   try {
     db.all(sql, [Department], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
-
-}
+};
 
 const getStaffPassword = (req, res) => {
   const { Email } = req.params;
@@ -87,14 +95,17 @@ const getStaffPassword = (req, res) => {
   try {
     db.all(sql, [Email], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -135,7 +146,9 @@ const addStudent = async (req, res) => {
       }
     );
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -146,7 +159,9 @@ const handleStdLogin = async (req, res) => {
   try {
     db.all(sql, [Email], async (err, rows) => {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        return res.json({
+          message: "Error",
+        });
       }
 
       if (rows.length === 0) {
@@ -175,14 +190,18 @@ const handleStdLogin = async (req, res) => {
       const sql = `update STUDENT set RefreshToken = ? where Email = ?`;
       db.run(sql, [refreshToken, Email], (err) => {
         if (err) {
-          return res.status(500).json({ error: err.message });
+          return res.json({
+            message: "Error",
+          });
         }
       });
 
       res.json({ Status: "Success", RefreshToken: refreshToken });
     });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -193,7 +212,9 @@ const handleStaffLogin = async (req, res) => {
   try {
     db.all(sql, [Email], async (err, rows) => {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        return res.json({
+          message: "Error",
+        });
       }
 
       if (rows.length === 0) {
@@ -224,13 +245,17 @@ const handleStaffLogin = async (req, res) => {
       const sql = `update LECTURER set RefreshToken = ? where Email = ?`;
       db.run(sql, [refreshToken, Email], (err) => {
         if (err) {
-          return res.status(500).json({ error: err.message });
+          return res.json({
+            message: "Error",
+          });
         }
       });
       res.json({ Status: "Success", RefreshToken: refreshToken });
     });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -240,22 +265,24 @@ const getStudentRegNumber = (req, res) => {
   try {
     db.all(sql, [Email], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
 const handleStdRefreshToken = async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res
-      .json({ message: "Refresh token is missing or malformed" });
+    return res.json({ message: "Refresh token is missing or malformed" });
   }
 
   const RefreshToken = authHeader.split(" ")[1];
@@ -295,7 +322,6 @@ const handleStdRefreshToken = async (req, res) => {
   }
 };
 
-
 const handleStaffRefreshToken = async (req, res) => {
   const RefreshToken = req.headers.authorization;
   //---------------------------------------------------------
@@ -331,7 +357,9 @@ const handleStaffRefreshToken = async (req, res) => {
       );
     });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -342,7 +370,9 @@ const handleStdLogout = async (req, res) => {
   try {
     db.all(sql, [RefreshToken], async (err, rows) => {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        return res.json({
+          message: "Error",
+        });
       }
 
       if (rows.length === 0) {
@@ -361,14 +391,18 @@ const handleStdLogout = async (req, res) => {
       const sql = `update STUDENT set RefreshToken = ? where Email = ?`;
       db.run(sql, [null, foundStudent.Email], (err) => {
         if (err) {
-          return res.status(500).json({ error: err.message });
+          return res.json({
+            message: "Error",
+          });
         }
       });
       res.clearCookie("jwt", { httpOnly: true });
       return res.status(200).json({ message: "Logged out successfully" });
     });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -379,7 +413,9 @@ const handleStaffLogout = async (req, res) => {
   try {
     db.all(sql, [RefreshToken], async (err, rows) => {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        return res.json({
+          message: "Error",
+        });
       }
 
       if (rows.length === 0) {
@@ -398,20 +434,32 @@ const handleStaffLogout = async (req, res) => {
       const sql = `update LECTURER set RefreshToken = ? where Email = ?`;
       db.run(sql, [null, foundStaff.Email], (err) => {
         if (err) {
-          return res.status(500).json({ error: err.message });
+          return res.json({
+            message: "Error",
+          });
         }
       });
       res.clearCookie("jwt", { httpOnly: true });
       return res.status(200).json({ message: "Logged out successfully" });
     });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
 const addStaff = async (req, res) => {
-  const { First_name, Last_name, Department, Email, Picture_URL, Password, Position, Title } =
-    req.body;
+  const {
+    First_name,
+    Last_name,
+    Department,
+    Email,
+    Picture_URL,
+    Password,
+    Position,
+    Title,
+  } = req.body;
   const sql = `insert into LECTURER(First_name, Last_name, Department, Email, Picture_URL, Password, Original_password, Position, Title) values(?,?,?,?,?,?,?,?,?)`;
   try {
     const hashedPassword = await bcrypt.hash(Password, 10);
@@ -427,11 +475,12 @@ const addStaff = async (req, res) => {
         Password,
         Position,
         Title,
-      ], 
+      ],
       (err) => {
         if (err) {
-          res.status(500).json(err.message);
-          res.send(400).json(err.message);
+          return res.json({
+            message: "Error",
+          });
         } else {
           return res.json({
             message: "Student added successfully",
@@ -440,7 +489,9 @@ const addStaff = async (req, res) => {
       }
     );
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -450,14 +501,17 @@ const getStaffByEmail = (req, res) => {
   try {
     db.all(sql, [Email], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -467,14 +521,17 @@ const getStaffDetailsByEmail = (req, res) => {
   try {
     db.all(sql, [Email], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -485,8 +542,9 @@ const updateStudentPassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(Password, 10);
     db.run(sql, [hashedPassword, Email], (err) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json({
           message: "Password updated successfully",
@@ -494,9 +552,11 @@ const updateStudentPassword = async (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
-}
+};
 
 const updateStaffPassword = async (req, res) => {
   const { Email, Password } = req.body;
@@ -505,8 +565,9 @@ const updateStaffPassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(Password, 10);
     db.run(sql, [hashedPassword, Password, Email], (err) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json({
           message: "Password updated successfully",
@@ -514,10 +575,11 @@ const updateStaffPassword = async (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
-
-}
+};
 
 const deleteStudent = (req, res) => {
   const { Reg_number } = req.body;
@@ -525,8 +587,9 @@ const deleteStudent = (req, res) => {
   try {
     db.run(sql, [Reg_number], (err) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json({
           message: "Student deleted successfully",
@@ -534,7 +597,9 @@ const deleteStudent = (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -545,14 +610,17 @@ const getStudentDetails = (req, res) => {
   try {
     db.all(sql, [Reg_number], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -566,8 +634,9 @@ const addTempUser = (req, res) => {
       [Email, Verification_Code, First_Name, Last_Name, Picture_URL],
       (err) => {
         if (err) {
-          res.status(500).json(err.message);
-          res.send(400).json(err.message);
+          return res.json({
+            message: "Error",
+          });
         } else {
           return res.json({
             message: "User added successfully",
@@ -576,7 +645,9 @@ const addTempUser = (req, res) => {
       }
     );
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -585,14 +656,17 @@ const getAllTempUsers = (req, res) => {
   try {
     db.all(sql, [], (err, rows) => {
       if (err) {
-        res.sendStatus(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -602,14 +676,17 @@ const getTempUserByID = (req, res) => {
   try {
     db.all(sql, [Email], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -619,8 +696,9 @@ const getTempUserPasscode = (req, res) => {
   try {
     db.all(sql, [Email], (err, rows) => {
       if (err) {
-        res.sendStatus(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
@@ -628,8 +706,7 @@ const getTempUserPasscode = (req, res) => {
   } catch (err) {
     res.sendStatus(500).json(err.message);
   }
-
-}
+};
 
 const updateVerificationCode = (req, res) => {
   const { Email, Verification_Code } = req.body;
@@ -637,8 +714,9 @@ const updateVerificationCode = (req, res) => {
   try {
     db.run(sql, [Verification_Code, Email], (err) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json({
           message: "Verification code updated successfully",
@@ -646,7 +724,9 @@ const updateVerificationCode = (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -656,8 +736,9 @@ const deleteTempUser = (req, res) => {
   try {
     db.run(sql, [Email], (err) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json({
           message: "User deleted successfully",
@@ -665,7 +746,9 @@ const deleteTempUser = (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -675,14 +758,17 @@ const getAppointmentCount = (req, res) => {
   try {
     db.all(sql, [Lecturer_mail], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -691,14 +777,17 @@ const getLastAppointment = (req, res) => {
   try {
     db.all(sql, (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -706,24 +795,28 @@ const addBlockTimeSlot = (req, res) => {
   const { Id, Lecturer_mail, StartTime, EndTime } = req.body;
   const sql = `insert into APPOINTMENT(Id, Lecturer_mail, StartTime, EndTime, Apt_status, Subject) values(?,?,?,?,?,?)`;
   try {
-    db.run(sql, [Id, Lecturer_mail, StartTime, EndTime, "Blocked", "Blocked"], (err) => {
-      if (err) {
-        return res.json({
-          error: true,
-        });
-      } else {
-        return res.json({
-          error: false,
-          message: "Time slot blocked successfully",
-        });
+    db.run(
+      sql,
+      [Id, Lecturer_mail, StartTime, EndTime, "Blocked", "Blocked"],
+      (err) => {
+        if (err) {
+          return res.json({
+            error: true,
+          });
+        } else {
+          return res.json({
+            error: false,
+            message: "Time slot blocked successfully",
+          });
+        }
       }
-    });
+    );
   } catch (err) {
     return res.json({
       error: true,
     });
   }
-}
+};
 
 const addAppointment = (req, res) => {
   const {
@@ -752,8 +845,9 @@ const addAppointment = (req, res) => {
       ],
       (err) => {
         if (err) {
-          res.status(500).json(err.message);
-          res.send(400).json(err.message);
+          return res.json({
+            message: "Error",
+          });
         } else {
           return res.json({
             message: "Appointment added successfully",
@@ -762,7 +856,9 @@ const addAppointment = (req, res) => {
       }
     );
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -804,7 +900,6 @@ const getStaff = (Email) => {
     });
   });
 };
-
 
 const getDate = (value) => {
   const date = new Date(value);
@@ -852,7 +947,9 @@ const acceptAppointment = async (req, res) => {
     } has been confirmed.</p>
       <h2>Appointment Details:</h2>
       <p>Date: ${getDate(appointment.StartTime)}</p>
-      <p>Time: ${getTime(appointment.StartTime)} - ${getTime(appointment.EndTime)}</p>
+      <p>Time: ${getTime(appointment.StartTime)} - ${getTime(
+      appointment.EndTime
+    )}</p>
       <br>
       <p>${staffDetails.First_name} ${staffDetails.Last_name}</p>
       <p>${staffDetails.Email}</p>
@@ -889,6 +986,27 @@ const acceptAppointment = async (req, res) => {
   }
 };
 
+const changeStaffImg = (req, res) => {
+  const { Email, Picture_URL } = req.body;
+  const sql = `update LECTURER set Picture_URL = ? where Email = ?`;
+  try {
+    db.run(sql, [Picture_URL, Email], (err) => {
+      if (err) {
+        return res.json({
+          message: "Error",
+        });
+      } else {
+        return res.json({
+          message: "Image updated successfully",
+        });
+      }
+    });
+  } catch (err) {
+    return res.json({
+      message: "Error",
+    });
+  }
+};
 
 const getAllAppointments = (req, res) => {
   const { Lecturer_mail } = req.params;
@@ -896,14 +1014,17 @@ const getAllAppointments = (req, res) => {
   try {
     db.all(sql, [Lecturer_mail], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -914,16 +1035,19 @@ const getStudentAppointments = (req, res) => {
   try {
     db.all(sql, [Reg_number], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
-}
+};
 
 const getAllConfirmedAppointments = (req, res) => {
   const { Lecturer_mail } = req.params;
@@ -931,19 +1055,23 @@ const getAllConfirmedAppointments = (req, res) => {
   try {
     db.all(sql, [Lecturer_mail], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
 const updateAppointment = (req, res) => {
-  const { Id, Subject, Description, StartTime, EndTime, Apt_status, Reason } = req.body;
+  const { Id, Subject, Description, StartTime, EndTime, Apt_status, Reason } =
+    req.body;
   const sql = `update APPOINTMENT set Subject = ?, Description = ?, StartTime = ?, EndTime = ?, Apt_status = ?, Reason = ? where Id = ?`;
   try {
     db.run(
@@ -951,8 +1079,9 @@ const updateAppointment = (req, res) => {
       [Subject, Description, StartTime, EndTime, Apt_status, Reason, Id],
       (err) => {
         if (err) {
-          res.status(500).json(err.message);
-          res.send(400).json(err.message);
+          return res.json({
+            message: "Error",
+          });
         } else {
           return res.json({
             message: "Appointment updated successfully",
@@ -961,7 +1090,9 @@ const updateAppointment = (req, res) => {
       }
     );
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -971,8 +1102,9 @@ const deleteAppointment = (req, res) => {
   try {
     db.run(sql, [Id], (err) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json({
           message: "Appointment deleted successfully",
@@ -980,7 +1112,9 @@ const deleteAppointment = (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -1010,7 +1144,9 @@ const deleteAppointmentByEmail = (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -1020,14 +1156,17 @@ const getAppointment = (req, res) => {
   try {
     db.all(sql, [Id], (err, rows) => {
       if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
+        return res.json({
+          message: "Error",
+        });
       } else {
         return res.json(rows);
       }
     });
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
 };
 
@@ -1035,41 +1174,54 @@ const updateStudent = (req, res) => {
   const { First_name, Last_name, Department, Batch, Reg_number } = req.body;
   const sql = `update STUDENT set First_name = ?, Last_name = ?, Department = ?, Batch = ? where Reg_number = ?`;
   try {
-    db.run(sql, [First_name, Last_name, Department, Batch, Reg_number], (err) => {
-      if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
-      } else {
-        return res.json({
-          message: "Student updated successfully",
-        });
+    db.run(
+      sql,
+      [First_name, Last_name, Department, Batch, Reg_number],
+      (err) => {
+        if (err) {
+          return res.json({
+            message: "Error",
+          });
+        } else {
+          return res.json({
+            message: "Student updated successfully",
+          });
+        }
       }
-    });
+    );
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
-
-}
+};
 
 const updateStaff = (req, res) => {
-  const { First_name, Last_name, Department, Position, Title, Email } = req.body;
+  const { First_name, Last_name, Department, Position, Title, Email } =
+    req.body;
   const sql = `update LECTURER set First_name = ?, Last_name = ?, Department = ?, Position = ?, Title = ? where Email = ?`;
   try {
-    db.run(sql, [First_name, Last_name, Department, Position, Title, Email], (err) => {
-      if (err) {
-        res.status(500).json(err.message);
-        res.send(400).json(err.message);
-      } else {
-        return res.json({
-          message: "Staff updated successfully",
-        });
+    db.run(
+      sql,
+      [First_name, Last_name, Department, Position, Title, Email],
+      (err) => {
+        if (err) {
+          return res.json({
+            message: "Error",
+          });
+        } else {
+          return res.json({
+            message: "Staff updated successfully",
+          });
+        }
       }
-    });
+    );
   } catch (err) {
-    res.status(500).json(err.message);
+    return res.json({
+      message: "Error",
+    });
   }
-
-}
+};
 
 module.exports = {
   getStudents,
