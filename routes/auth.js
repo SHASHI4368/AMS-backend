@@ -7,6 +7,7 @@ let currentUser = null;
 
 router.get("/login/success", (req, res) => {
   if (currentUser) {
+    console.log(currentUser);
     res.clearCookie("session");
     res.clearCookie("session.sig");
     res.status(200).json({
@@ -27,7 +28,6 @@ router.get("/login/failed", (req, res) => {
   res.status(401).json({
     error: true,
     message: "Login failure",
-    
   });
 });
 
@@ -61,10 +61,8 @@ router.get("/google/callback", (req, res, next) => {
       }
 
       delete req.session.authAction; // Clear the session variable
-      if(currentUser === null) {
+      if (currentUser === null) {
         currentUser = user;
-      }else{
-        currentUser = null;
       }
       res.redirect(redirectUrl);
     });
