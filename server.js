@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
-const passportStrategy = require("./passport");
 const authRoute = require("./routes/auth");
 const mailRouter = require("./routes/mail");
 const dbRouter = require("./routes/db");
@@ -11,7 +10,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const http = require("http");
 const socketIo = require("socket.io");
-const session = require("express-session");
 
 const app = express();
 const server = http.createServer(app);
@@ -34,18 +32,6 @@ app.use(
     name: "session",
     keys: ["ams"],
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-  })
-);
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET, // Set this to a secure value
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false, // Set to true if serving over HTTPS
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
   })
 );
 
