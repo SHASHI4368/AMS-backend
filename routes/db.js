@@ -109,7 +109,7 @@ dbRouter.delete("/appointment/:Id", deleteAppointment);
 dbRouter.get("/appointment/delete/:Id", deleteAppointmentByEmail);
 dbRouter.get("/appointment/:Id", getAppointment);
 dbRouter.get("/appointment/accept/:Id", acceptAppointment);
-dbRouter.get("/appointment/delete/:Lecturer_mail", deleteAppointmentByStaffEmail);
+dbRouter.delete("/appointment/delete/:Lecturer_mail", deleteAppointmentByStaffEmail);
 
 
 // dbRouter.use(verifyJWT);
